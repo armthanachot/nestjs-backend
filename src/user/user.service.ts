@@ -15,8 +15,20 @@ export class UserService {
   async findAll(): Promise<User[]> {
     return await this.usersRepository.find();
   }
+  async findById(id:any):Promise<User>{
+    const user = await this.usersRepository.findOne({id})
+    return user 
+  }
   async create(user) {
     const result = await this.usersRepository.save(user);
-    return result;
+    return "OK";
+  }
+  async update(id:any,user:object){
+    const result = await this.usersRepository.update({id},{...user})
+    return result
+  }
+  async destroy(id:any){
+    const result = await this.usersRepository.delete({id})
+    return result
   }
 }

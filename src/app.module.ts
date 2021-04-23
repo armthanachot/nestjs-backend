@@ -7,7 +7,6 @@ import {Connection} from "typeorm"
 import {User} from "./user/user.entity"
 import { EmployeeService } from './employee/employee.service';
 import { EmployeeModule } from './employee/employee.module';
-import { AuthController } from './auth/auth.controller';
 @Module({
   imports: [UserModule,TypeOrmModule.forRoot({
     type:"mysql",
@@ -19,7 +18,7 @@ import { AuthController } from './auth/auth.controller';
     entities:[User],
     synchronize:true
   }), EmployeeModule],
-  controllers: [AppController, AuthController],
+  controllers: [AppController],
   providers: [AppService, EmployeeService],
 })
 export class AppModule {
