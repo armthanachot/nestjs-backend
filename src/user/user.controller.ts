@@ -21,10 +21,15 @@ export class UserController {
   @Get("greeting")
   async findGreeting(@Req() req: Request, @Res() res: Response) {
     const greetingMessage = this.userService.getGreeting;
-    return res.status(200).json(greetingMessage);
+    return res.status(200).json({message:greetingMessage});
   }
   @Get(":id")
   async findById(@Req() req: Request, @Res() res: Response) {
+    console.log(req.path);
+    console.log(req.method);
+    const hasParams = req.params ? true:false 
+    console.log(hasParams);
+    
     const { id } = req.params;
     const user = await this.userService.findById(id);
     return res.status(200).json({ data: user });
@@ -59,8 +64,7 @@ export class UserController {
       if (validated.message) {
         return res.status(400).json({ data: "validation error" });
       }
-      console.log("users: ", users);
-
+      users.password = await passwordHash(users.password)
       const created = await this.userService.create(users)
       return res.status(200).json({ message: "OK" });
     }

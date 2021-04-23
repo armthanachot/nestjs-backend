@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn,CreateDateColumn,UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn,CreateDateColumn,UpdateDateColumn,OneToOne,JoinColumn} from 'typeorm';
+import {User_type} from "./user_type.entity"
 @Entity()
 export class User{
     @PrimaryGeneratedColumn()
@@ -18,6 +19,10 @@ export class User{
   
     @Column({ default: true })
     isActive: boolean;
+
+    @OneToOne(type => User_type,user_type => user_type.id)
+    @JoinColumn()
+    user_type:User_type
 
     @CreateDateColumn()
     created_at:Date
