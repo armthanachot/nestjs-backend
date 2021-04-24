@@ -23,13 +23,10 @@ export class UserService {
   async findAll(): Promise<User[]> {
     return await this.usersRepository.find();
   }
-  async findByEmail(email:string):Promise<User>{
+  async findByEmail(email:string){
     const arrColumn = ["user.id AS id","user.firstName AS firstname","user.lastName AS lastname","user.email AS email","user.password AS password","user_type.type AS type"]
-    const data = await getManager().createQueryBuilder().select(arrColumn).from(User,"user").leftJoin(User_type,"user_type","user.userTypeId = user_type.id").where("user.email = :email",{email})
-    console.log(data.getSql());
-    console.log(await data.getRawOne());
-    
-    return await this.usersRepository.findOne({email})
+    const user = await getManager().createQueryBuilder().select(arrColumn).from(User,"user").leftJoin(User_type,"user_type","user.userTypeId = user_type.id").where("user.email = :email",{email}).getRawOne()
+    return user
   }
   async findById(id:any):Promise<User>{
     const user = await this.usersRepository.findOne({id})
