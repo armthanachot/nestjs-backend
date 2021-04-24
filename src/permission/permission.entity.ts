@@ -1,6 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn,CreateDateColumn,UpdateDateColumn} from 'typeorm';
-
-@Entity()
+import { Entity, Column, PrimaryGeneratedColumn,CreateDateColumn,UpdateDateColumn,OneToOne,JoinColumn} from 'typeorm';
+ @Entity()
 export class Permission{
     @PrimaryGeneratedColumn()
     id: number;
@@ -10,9 +9,6 @@ export class Permission{
 
     @Column()
     method: string
-    
-    @Column({default:false})
-    params: Boolean
 
     @CreateDateColumn()
     created_at:Date

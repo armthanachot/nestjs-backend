@@ -3,7 +3,6 @@ import { Request, Response } from "express";
 import { UserService } from "./user.service";
 import * as schema from "../schema_validator/validator/user.validator";
 import { passwordHash } from "src/utils/auth";
-
 @Controller("user")
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -25,11 +24,7 @@ export class UserController {
   }
   @Get(":id")
   async findById(@Req() req: Request, @Res() res: Response) {
-    console.log(req.path);
-    console.log(req.method);
-    const hasParams = req.params ? true:false 
-    console.log(hasParams);
-    
+    console.log(req.route.path);
     const { id } = req.params;
     const user = await this.userService.findById(id);
     return res.status(200).json({ data: user });
@@ -57,7 +52,7 @@ export class UserController {
         user.password = await passwordHash(user.password);
         return user;
       }));
-      const created = await this.userService.create(user)
+      // const created = await this.userService.create(user)
       return res.status(200).json({ message: "OK" });
     } else {
       const validated = await schema.create(users);
@@ -65,7 +60,7 @@ export class UserController {
         return res.status(400).json({ data: "validation error" });
       }
       users.password = await passwordHash(users.password)
-      const created = await this.userService.create(users)
+      // const created = await this.userService.create(users)
       return res.status(200).json({ message: "OK" });
     }
   }

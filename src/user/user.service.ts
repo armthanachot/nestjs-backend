@@ -1,7 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { Repository,QueryBuilder,getRepository,getManager } from "typeorm";
 import { User } from "./user.entity";
+import {User_type} from "./user_type.entity"
+import * as jwt from "jsonwebtoken"
+import {SECRETKEY} from "../../constants/config"
+import { array } from "joi";
 
 @Injectable()
 export class UserService {
@@ -12,10 +16,19 @@ export class UserService {
     const greeting = "hey congrats";
     return greeting;
   }
+  async jwtSign({username,role}){
+    const token = await jwt.sign({username,role},SECRETKEY,{expiresIn:"120"})
+    return token 
+  }
   async findAll(): Promise<User[]> {
     return await this.usersRepository.find();
   }
   async findByEmail(email:string):Promise<User>{
+    const arrColumn = ["user.id AS id","user.firstName AS firstname","user.lastName AS lastname","user.email AS email","user.password AS password","user_type.type AS type"]
+    const data = await getManager().createQueryBuilder().select(arrColumn).from(User,"user").leftJoin(User_type,"user_type","user.userTypeId = user_type.id").where("user.email = :email",{email})
+    console.log(data.getSql());
+    console.log(await data.getRawOne());
+    
     return await this.usersRepository.findOne({email})
   }
   async findById(id:any):Promise<User>{

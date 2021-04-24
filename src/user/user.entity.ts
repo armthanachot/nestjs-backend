@@ -20,8 +20,8 @@ export class User{
     @Column({ default: true })
     isActive: boolean;
 
-    @OneToOne(type => User_type,user_type => user_type.id)
-    @JoinColumn()
+    @OneToOne(type => User_type,{primary:true,onDelete:"CASCADE",onUpdate:"CASCADE"})
+    @JoinColumn({referencedColumnName:"id"})
     user_type:User_type
 
     @CreateDateColumn()
