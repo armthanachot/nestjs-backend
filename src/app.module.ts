@@ -15,6 +15,9 @@ import { AuthModule } from './auth/auth.module';
 import { PermissionModule } from './permission/permission.module';
 import {permissionVerify} from "../middleware/permission.middleware"
 import {ROLE} from "../constants/config"
+import {csrfProtection} from "../middleware/security.middleware"
+import { AppGateway } from './app.gateway';
+import { TestsocketGateway } from './testsocket.gateway';
 @Module({
   imports: [UserModule,TypeOrmModule.forRoot({
     type:"mysql",
@@ -27,7 +30,7 @@ import {ROLE} from "../constants/config"
     synchronize:true
   }), EmployeeModule, AuthModule, PermissionModule],
   controllers: [AppController],
-  providers: [AppService,AuthService, EmployeeService],
+  providers: [AppService,AuthService, EmployeeService, AppGateway, TestsocketGateway],
 })
 export class AppModule implements NestModule {
   constructor(private connection:Connection){}
@@ -35,6 +38,7 @@ export class AppModule implements NestModule {
     const {GET,POST,PUT,DELETE,ALL} = RequestMethod
     const {CEO,DEV,MD} = ROLE
     consumer.apply(await permissionVerify([CEO,DEV,MD])).forRoutes({path:'user',method:ALL})
+    consumer.apply(csrfProtection).forRoutes({path:'user',method:ALL})
     // consumer.apply(permissionVerify).forRoutes({path:'user',method:RequestMethod.PUT})
   }
 }
