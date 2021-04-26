@@ -5,7 +5,6 @@ import { User } from "./user.entity";
 import {User_type} from "./user_type.entity"
 import * as jwt from "jsonwebtoken"
 import {SECRETKEY} from "../../constants/config"
-import { array } from "joi";
 
 @Injectable()
 export class UserService {
